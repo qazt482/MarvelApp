@@ -5,47 +5,44 @@ import java.util.List;
 
 public class ComicsDto {
 
-    private Data data;
+    public int code;
+    public Data data;
 }
 
 class Data {
 
     private int count;
     private int total;
-    private List<Results> results;
+    public List<Results> results;
 
 }
 
 class Results {
 
     private long id;
-    private String title;
-    private String description;
-    private int pageCount;
-    private List<Prices> prices;
-    private Creators creators;
-    private ImageDto thumbnail;
-    private ImageDto images;
+    public String title;
+    public String description;
+    public int pageCount;
+    public List<Prices> prices;
+    public Creators creators;
+    public ImageDto thumbnail;
+//    private ImageDto images;
 }
 
 class Prices {
-    private String type;
-    private double price;
+    public String type;
+    public double price;
 }
 
 class Creators {
-
-    private int available;
-    private List<Item> items;
-
+    public List<Item> items;
 }
 
 class Item {
-    private String name;
-    private String role;
+    public String name;
 }
 
 class ImageDto {
-    private String path;
-    private String extension;
+    public String path;
+    public String extension;
 }
