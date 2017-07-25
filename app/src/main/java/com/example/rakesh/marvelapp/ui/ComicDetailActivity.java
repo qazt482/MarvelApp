@@ -1,4 +1,4 @@
-package com.example.rakesh.marvelapp;
+package com.example.rakesh.marvelapp.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,8 @@ import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
+
+import com.example.rakesh.marvelapp.R;
 
 /**
  * An activity representing a single Comic detail screen. This

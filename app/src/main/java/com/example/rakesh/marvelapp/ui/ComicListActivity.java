@@ -1,4 +1,4 @@
-package com.example.rakesh.marvelapp;
+package com.example.rakesh.marvelapp.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +15,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
-import com.example.rakesh.marvelapp.dummy.DummyContent;
+import com.example.rakesh.marvelapp.R;
+import com.example.rakesh.marvelapp.model.DummyContent;
 
 import java.util.List;
 

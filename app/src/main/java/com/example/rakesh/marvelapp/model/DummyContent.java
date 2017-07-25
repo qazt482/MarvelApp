@@ -1,4 +1,4 @@
-package com.example.rakesh.marvelapp.dummy;
+package com.example.rakesh.marvelapp.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package com.example.rakesh.marvelapp;
+package com.example.rakesh.marvelapp.ui;
 
 import android.app.Activity;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -9,7 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.rakesh.marvelapp.dummy.DummyContent;
+import com.example.rakesh.marvelapp.R;
+import com.example.rakesh.marvelapp.model.DummyContent;
 
 /**
  * A fragment representing a single Comic detail screen.
