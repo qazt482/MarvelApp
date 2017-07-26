@@ -17,11 +17,25 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug {
+            buildConfigField "String", "MARVEL_PUBLIC_KEY", getMyApiKey("MARVEL_PUBLIC_KEY")
+            buildConfigField "String", "MARVEL_PRIVATE_KEY", getMyApiKey("MARVEL_PRIVATE_KEY")
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    buildTypes.each {
+
+    }
+}
+
+def getMyApiKey(String property){
+    Properties properties = new Properties()
+    properties.load(new FileInputStream("marvel_keys.properties"))
+    return "\"" + properties.getProperty(property) +"\""
 }
 
 dependencies {

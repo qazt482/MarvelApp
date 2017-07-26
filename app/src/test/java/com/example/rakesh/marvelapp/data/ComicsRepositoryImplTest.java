@@ -11,22 +11,24 @@ import java.io.IOException;
 import java.math.BigDecimal;
 
 import io.reactivex.observers.TestObserver;
+import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class ComicsRepositoryImplTest {
 
     private MockWebServer server;
     private ComicsRepositoryImpl comicsRepository;
+    private final TestObserver<Comic> testObserver = new TestObserver<>();
 
     @Before
     public void startServer() throws IOException {
         server = new MockWebServer();
         server.start();
-        String url = server.url("/").toString();
-        comicsRepository = new ComicsRepositoryImpl(url);
+        comicsRepository = new ComicsRepositoryImpl(server.url("/").toString(), "public_key", "private_key");
     }
 
     @After
@@ -35,13 +37,12 @@ public class ComicsRepositoryImplTest {
     }
 
     @Test
-    public void mapsJsonToPojo() {
+    public void shouldMapJsonToPojo() {
 
         server.enqueue(new MockResponse()
                 .setResponseCode(200)
                 .setBody(getJson()));
 
-        TestObserver<Comic> testObserver = new TestObserver<>();
         comicsRepository.getComics()
                 .subscribeWith(testObserver);
 
@@ -54,6 +55,23 @@ public class ComicsRepositoryImplTest {
         assertEquals(4, testObserver.values().get(0).getCreators().size());
         assertEquals("Warren Ellis", testObserver.values().get(0).getCreators().get(0));
         assertEquals("http://i.annihil.us/u/prod/marvel/i/mg/6/c0/4ffb20969054f/standard_medium.jpg", testObserver.values().get(0).getImageUrl());
+    }
+
+    @Test
+    public void shouldSendCorrectParameters() throws InterruptedException {
+
+        server.enqueue(new MockResponse()
+                .setResponseCode(200));
+
+        comicsRepository.getComics()
+                .subscribeWith(testObserver);
+
+        HttpUrl requestUrl = server.takeRequest().getRequestUrl();
+
+        assertEquals("100", requestUrl.queryParameter("limit"));
+        assertEquals("public_key", requestUrl.queryParameter("apikey"));
+        assertNotNull(requestUrl.queryParameter("ts"));
+        assertNotNull(requestUrl.queryParameter("hash"));
     }
 
     private String getJson() {
