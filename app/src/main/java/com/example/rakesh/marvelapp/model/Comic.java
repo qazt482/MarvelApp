@@ -1,11 +1,12 @@
 package com.example.rakesh.marvelapp.model;
 
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Comic {
+public class Comic implements Serializable {
 
     private String imageUrl;
     private String title;

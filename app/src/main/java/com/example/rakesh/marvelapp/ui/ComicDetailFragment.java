@@ -10,30 +10,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.rakesh.marvelapp.R;
-import com.example.rakesh.marvelapp.model.DummyContent;
+import com.example.rakesh.marvelapp.model.Comic;
 
-/**
- * A fragment representing a single Comic detail screen.
- * This fragment is either contained in a {@link ComicListActivity}
- * in two-pane mode (on tablets) or a {@link ComicDetailActivity}
- * on handsets.
- */
 public class ComicDetailFragment extends Fragment {
-    /**
-     * The fragment argument representing the item ID that this fragment
-     * represents.
-     */
+
     public static final String ARG_ITEM_ID = "item_id";
 
-    /**
-     * The dummy content this fragment is presenting.
-     */
-    private DummyContent.DummyItem mItem;
+    public static Comic mComic;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public ComicDetailFragment() {
     }
 
@@ -41,17 +25,13 @@ public class ComicDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
-            // Load the dummy content specified by the fragment
-            // arguments. In a real-world scenario, use a Loader
-            // to load content from a content provider.
-            mItem = DummyContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
+        Bundle extras = getActivity().getIntent().getExtras();
 
-            Activity activity = this.getActivity();
-            CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
-            if (appBarLayout != null) {
-                appBarLayout.setTitle(mItem.content);
-            }
+        mComic = (Comic) extras.getSerializable(ARG_ITEM_ID);
+        Activity activity = this.getActivity();
+        CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.toolbar_layout);
+        if (appBarLayout != null) {
+            appBarLayout.setTitle(mComic.getTitle());
         }
     }
 
@@ -60,9 +40,8 @@ public class ComicDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.comic_detail, container, false);
 
-        // Show the dummy content as text in a TextView.
-        if (mItem != null) {
-            ((TextView) rootView.findViewById(R.id.comic_detail)).setText(mItem.details);
+        if (mComic != null) {
+            ((TextView) rootView.findViewById(R.id.comic_detail)).setText(mComic.getDescription());
         }
 
         return rootView;
