@@ -3,20 +3,22 @@ package com.example.rakesh.marvelapp.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.example.rakesh.marvelapp.MarvelApplication;
 import com.example.rakesh.marvelapp.R;
+import com.example.rakesh.marvelapp.data.ComicsRepository;
+import com.example.rakesh.marvelapp.model.Comic;
 import com.example.rakesh.marvelapp.model.DummyContent;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -28,13 +30,14 @@ import java.util.List;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class ComicListActivity extends AppCompatActivity {
+public class ComicListActivity extends AppCompatActivity implements ComicListView{
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
      */
     private boolean mTwoPane;
+    private ComicListPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,18 +48,13 @@ public class ComicListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        ComicsRepository comicsRepository = ((MarvelApplication) getApplication()).comicsRepository;
+        presenter = new ComicListPresenter(this, comicsRepository);
+        presenter.getComics();
 
-        View recyclerView = findViewById(R.id.comic_list);
-        assert recyclerView != null;
-        setupRecyclerView((RecyclerView) recyclerView);
+//        View recyclerView = findViewById(R.id.comic_list);
+//        assert recyclerView != null;
+//        ((RecyclerView) recyclerView).setAdapter(new SimpleItemRecyclerViewAdapter(DummyContent.ITEMS, this));
 
         if (findViewById(R.id.comic_detail_container) != null) {
             // The detail container view will be present only in the
@@ -67,17 +65,22 @@ public class ComicListActivity extends AppCompatActivity {
         }
     }
 
-    private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(DummyContent.ITEMS));
+    @Override
+    public void addComics(List<Comic> comics) {
+        View recyclerView = findViewById(R.id.comic_list);
+        assert recyclerView != null;
+        ((RecyclerView) recyclerView).setAdapter(new SimpleItemRecyclerViewAdapter(DummyContent.ITEMS, this));
     }
 
     public class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         private final List<DummyContent.DummyItem> mValues;
+        private ComicListActivity context;
 
-        public SimpleItemRecyclerViewAdapter(List<DummyContent.DummyItem> items) {
+        public SimpleItemRecyclerViewAdapter(List<DummyContent.DummyItem> items, ComicListActivity comicListActivity) {
             mValues = items;
+            context = comicListActivity;
         }
 
         @Override
@@ -92,6 +95,7 @@ public class ComicListActivity extends AppCompatActivity {
             holder.mItem = mValues.get(position);
             holder.mIdView.setText(mValues.get(position).id);
             holder.mContentView.setText(mValues.get(position).content);
+            Picasso.with(context).load("http://i.imgur.com/DvpvklR.png").into(holder.mImageView);
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -124,6 +128,7 @@ public class ComicListActivity extends AppCompatActivity {
             public final View mView;
             public final TextView mIdView;
             public final TextView mContentView;
+            public final ImageView mImageView;
             public DummyContent.DummyItem mItem;
 
             public ViewHolder(View view) {
@@ -131,6 +136,7 @@ public class ComicListActivity extends AppCompatActivity {
                 mView = view;
                 mIdView = (TextView) view.findViewById(R.id.id);
                 mContentView = (TextView) view.findViewById(R.id.content);
+                mImageView = view.findViewById(R.id.thumbnail);
             }
 
             @Override
